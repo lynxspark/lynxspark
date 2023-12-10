@@ -1,0 +1,31 @@
+# Rust
+target/
+Cargo.lock
+
+# Rust/Cargo generated files
+Cargo.toml.orig
+Cargo.toml.orig.orig
+Cargo.toml.rej
+*.rlib
+*.rmeta
+*.rmeta.orig
+*.rmeta.orig.orig
+*.rmeta.rej
+*.rlib.orig
+*.rlib.orig.orig
+*.rlib.rej
+*.rmeta.rej
+*.rlib.rej
+*.rmeta.bk
+*.rlib.bk
+
+# VS Code
+.vscode/
+.history/
+.DS_Store
+
+# Rust for Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+System Volume Information/
