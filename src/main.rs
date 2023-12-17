@@ -1,5 +1,6 @@
 mod http;
 pub mod storage;
+pub mod utils;
 use http::methods::Method;
 use http::server::Handler;
 
@@ -25,6 +26,8 @@ fn main() {
         .route(Method::GET, &command::get::path(), command::get::command);
     app.router
         .route(Method::DELETE, &command::del::path(), command::del::command);
+    app.router
+        .route(Method::GET, &command::keys::path(), command::keys::command);
 
     app.start();
 }
