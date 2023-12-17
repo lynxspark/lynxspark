@@ -16,7 +16,7 @@ pub struct Handler {
 impl Handler {
     pub fn new(bind: &str, port: u16) -> Self {
         let listener = TcpListener::bind(format!("{}:{}", bind, port)).expect("Failed to bind TcpListener");
-        println!("Handler listening on port {}...", port);
+        println!("LynxSpark listening on port {}...", port);
 
         let router = Router::new();
 

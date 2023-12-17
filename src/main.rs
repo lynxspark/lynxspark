@@ -1,11 +1,14 @@
-
 mod http;
-use http::server::Handler;
+pub mod storage;
+pub mod utils;
 use http::methods::Method;
+use http::server::Handler;
 
-mod commands;
+mod command;
 
 fn main() {
+    storage::manager::initialize();
+
     struct Config {
         bind: String,
         port: u16,
@@ -15,12 +18,16 @@ fn main() {
         bind: String::from("127.0.0.1"),
         port: 8080,
     };
-    
-    let mut app = Handler::new(&config.bind, config.port);
 
-    app.router.route(Method::GET, &commands::set::path(),  commands::set::command);
-    app.router.route(Method::POST, &commands::get::path(),  commands::get::command);
-    
+    let mut app = Handler::new(&config.bind, config.port);
+    app.router
+        .route(Method::POST, &command::set::path(), command::set::command);
+    app.router
+        .route(Method::GET, &command::get::path(), command::get::command);
+    app.router
+        .route(Method::DELETE, &command::del::path(), command::del::command);
+    app.router
+        .route(Method::GET, &command::keys::path(), command::keys::command);
 
     app.start();
 }
