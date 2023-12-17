@@ -23,7 +23,7 @@ pub fn command(request: &str) -> String {
     let value = keys.get("value").unwrap();
     
     // Handle the result of add_item
-    if let Err(err) = storage::manager::add_item(&key, &value) {
+    if let Err(err) = storage::manager::set(&key, &value) {
         // Return an error response
         return http::response::internal_server_error(&format!("Error adding item to storage: {}", err));
     }

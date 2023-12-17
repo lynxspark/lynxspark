@@ -12,7 +12,7 @@ pub fn command(request: &str) -> String {
     let keys = key_parser(request, &allowed_keys);
 
     if let Some(pattern) = keys.get("pattern") {
-        match storage::manager::keys_item_search(&utils::url::decode(pattern)) {
+        match storage::manager::keys(&utils::url::decode(pattern)) {
             Ok(results) => {
                 if !results.is_empty() {
                     let mut formatted_results = String::new();

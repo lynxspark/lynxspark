@@ -16,7 +16,7 @@ pub fn command(request: &str) -> String {
     
     let key = keys.get("key").unwrap();
     
-    if let Ok(Some(value)) = storage::manager::get_item(&key) {
+    if let Ok(Some(value)) = storage::manager::get(&key) {
         http::response::ok(value.as_str())
     } else {
         http::response::ok("NOT_FOUND")
