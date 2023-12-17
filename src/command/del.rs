@@ -17,7 +17,7 @@ pub fn command(request: &str) -> String {
     
     let key = keys.get("key").unwrap();
     // Handle the result of add_item
-    if let Err(err) = storage::manager::delete_item(&key) {
+    if let Err(err) = storage::manager::del(&key) {
         // Return an error response
         return http::response::internal_server_error(&format!("Error adding item to storage: {}", err));
     }

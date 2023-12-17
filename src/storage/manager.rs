@@ -1,20 +1,18 @@
-use std::sync::{Once, RwLock};
 use std::collections::HashMap;
+use std::sync::{Once, RwLock};
 
-use regex::Regex;
+use crate::utils;
 
 static INIT: Once = Once::new();
 static mut STORAGE: *mut Option<RwLock<HashMap<String, String>>> = std::ptr::null_mut();
 
 pub fn initialize() {
-    INIT.call_once(|| {
-        unsafe {
-            STORAGE = Box::into_raw(Box::new(Some(RwLock::new(HashMap::new()))));
-        }
+    INIT.call_once(|| unsafe {
+        STORAGE = Box::into_raw(Box::new(Some(RwLock::new(HashMap::new()))));
     });
 }
 
-pub fn add_item(key: &str, value: &str) -> Result<(), String> {
+pub fn set(key: &str, value: &str) -> Result<(), String> {
     unsafe {
         let storage = &mut *STORAGE;
         if let Some(ref mut storage) = *storage {
@@ -27,7 +25,7 @@ pub fn add_item(key: &str, value: &str) -> Result<(), String> {
     }
 }
 
-pub fn get_item(key: &str) -> Result<Option<String>, String> {
+pub fn get(key: &str) -> Result<Option<String>, String> {
     unsafe {
         let storage = &*STORAGE;
         if let Some(ref storage) = *storage {
@@ -39,7 +37,7 @@ pub fn get_item(key: &str) -> Result<Option<String>, String> {
     }
 }
 
-pub fn delete_item(key: &str) -> Result<(), String> {
+pub fn del(key: &str) -> Result<(), String> {
     unsafe {
         let storage = &mut *STORAGE;
         if let Some(ref mut storage) = *storage {
@@ -52,7 +50,7 @@ pub fn delete_item(key: &str) -> Result<(), String> {
     }
 }
 
-pub fn keys_item_search(pattern: &str) -> Result<Vec<String>, String> {
+pub fn keys(pattern: &str) -> Result<Vec<String>, String> {
     unsafe {
         let storage = &*STORAGE;
         if let Some(ref storage) = *storage {
@@ -60,8 +58,7 @@ pub fn keys_item_search(pattern: &str) -> Result<Vec<String>, String> {
             let mut results = Vec::new();
 
             for k in guard.keys() {
-                println!("{} : {}", pattern, k);
-                if glob_match(pattern, k) {
+                if utils::regex::is_match(pattern, k) {
                     results.push(k.clone());
                 }
             }
@@ -72,13 +69,3 @@ pub fn keys_item_search(pattern: &str) -> Result<Vec<String>, String> {
         }
     }
 }
-
-
-fn glob_match(pattern: &str, s: &str) -> bool {
-    let encoded_pattern = pattern;
-    let regex_pattern = format!("^{}$", encoded_pattern.replace("?", ".").replace("*", ".*"));
-    
-    let regex = regex::Regex::new(&regex_pattern).unwrap();
-    regex.is_match(s)
-}
-
